@@ -1,4 +1,4 @@
-# Web Clock Documentation
+# Web Clock
 
 This documentation provides an overview of the features and functionality of the Web Clock project, which includes an analog clock, time zone selection, customizable clock hands, and more.
 
