@@ -80,6 +80,8 @@ body.dark {
   border-radius: 25px;
   transform-origin: bottom;
   background: var(--red-color);
+  transition: transform 0.5s ease-in-out; /* Add transition properties */
+
 }
 .hand.minute {
   height: 120px;
@@ -91,7 +93,7 @@ body.dark {
   width: 8px;
   background: var(--black-color);
 }
-.mode-switch {
+/* .mode-switch {
   padding: 10px 20px;
   border-radius: 8px;
   font-size: 22px;
@@ -101,10 +103,237 @@ body.dark {
   background: var(--black-color);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-}
+} */
 .date-part {
     font-size: 15px;
     font-weight: bold;
     margin-left: 200%; /* Move the text to the right */
 }
+
+/* Style for the input container (including time zone input) */
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* Style for the input fields (including time zone input) */
+.input-field {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Style for the color input type */
+input[type="color"] {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+}
+
+/* Style for the time zone input field */
+#timezone-selector {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+/* Style for information panels */
+/* .info-panel {
+  display: none;
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  max-width: 300px;
+  z-index: 100;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+} */
+
+/* Style for the question mark icon */
+.question-mark {
+  font-size: 20px;
+  color: #0078d4;
+  cursor: pointer;
+}
+
+/* Styles for bi-color hands */
+.hand.bi-color {
+  background-image: linear-gradient(to right, var(--color1), var(--color2));
+}
+
+/* Styles for hand tapering */
+.hand.tapered {
+  transform-origin: center bottom;
+}
+
+/* Dark Mode Styles
+body.dark {
+  --primary-color: #242526;
+  --white-color: #18191a;
+  --black-color: #fff;
+  --red-color: #e74c3c; */
+
+  /* Update styles for other elements */
+  /* Example: */
+  .container {
+    background-color: var(--primary-color);
+  }
+
+  .clock {
+    background-color: var(--white-color);
+    /* Add other styles for dark mode */
+  }
+
+/* Reset some default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Set a background color for the entire page */
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #f0f0f0;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Style the clock container */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+/* Style the clock */
+.clock {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  position: relative;
+}
+
+/* Style clock labels */
+.clock label {
+  position: absolute;
+  inset: 15px;
+  text-align: center;
+  transform: rotate(calc(var(--i) * (360deg / 12)));
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Style clock label spans */
+.clock label span {
+  display: inline-block;
+  font-size: 24px;
+  color: #333;
+  transform: rotate(calc(var(--i) * (-360deg / 12)));
+}
+
+/* Style clock hands */
+.hand {
+  position: absolute;
+  height: 2px;
+  width: 50%;
+  background-color: #333;
+  transform-origin: 100%;
+  transform: translateX(100%);
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Style the date container */
+#date-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Style date parts */
+.date-part {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+/* Style the mode switch button */
+/* .mode-switch {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+} */
+
+/* Hover effect for mode switch */
+.mode-switch:hover {
+  background-color: #555;
+}
+
+/* Style the input fields */
+.input-field {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 4px 0;
+}
+
+/* Style the clock circle background color input */
+#clock-bg-color {
+  margin-top: 10px;
+}
+
+/* Style the alarm input field */
+.alarm-input {
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 180px;
+  margin-right: 10px;
+}
+
+/* Style the set alarm button */
+.alarm-button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 400;
+  display: inline-block;
+  color: #fff;
+  background: #007bff; /* Blue background color */
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Add a smooth background color transition */
+}
+
+/* Hover effect for the set alarm button */
+.alarm-button:hover {
+  background: #0056b3; /* Darker blue on hover */
+}
+
+
+
+
 

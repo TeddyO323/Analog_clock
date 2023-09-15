@@ -7,9 +7,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Analog Clock JavaScript</title>
     <link rel="stylesheet" href="styles.css" />
-    <script src="script.js" defer></script>
   </head>
   <body>
+    
+  <!-- Add input fields for customizing the clock hands with specific IDs -->
+  <div class="input-container">
+    <div id="timezone-info-panel" class="info-panel"></div>
+<div id="timekeeping-info-panel" class="info-panel"></div>
+<div id="analog-clock-info-panel" class="info-panel"></div>
+
+    <label for="hand-color">Hand Color:</label>
+    <input type="color" id="hand-color" value="black" class="input-field">
+
+    <label for="clock-bg-color">Clock Background Color:</label>
+<input type="color" id="clock-bg-color" value="#fff" class="input-field"><br>
+
+<label for="hand-transparency">Hand Transparency:</label>
+<input type="range" id="hand-transparency" min="0" max="1" step="0.01" value="1" class="input-field"><br>
+
+<label for="rounded-ends">Rounded Ends:</label>
+<input type="checkbox" id="rounded-ends" class="input-field"><br>
+
+
+  
+   
+  
+    <label for="hand-style">Hand Style:</label>
+    <select id="hand-style" class="input-field">
+      <option value="square">Square</option>
+      <option value="round">Round</option>
+
+    </select>
+    <label for="timezone-selector">Select Time Zone:</label>
+    <select id="timezone-selector" class="input-field">
+      <option value="">Select Time Zone</option>
+      <!-- Add time zone options here -->
+    </select>
+  </div>
+  
+
+     
+      <!-- Add more options for different time zones -->
+    </select>
     <div class="container">
       <div class="clock">
         <label style="--i: 1"><span>1</span></label>
@@ -35,10 +74,24 @@
             <div class="date-part" id="day"></div>
             <div class="date-part" id="year"></div>
         </div>
+        
     
       </div>
-      <div class="mode-switch">Dark Mode</div>
+      <audio id="clock-tick-sound">
+        <source src="ticking-clock_1-27477.mp3" type="audio/mpeg">
+      </audio>
+      
 
     </div>
+    <!-- Add a container for world clock times -->
+<div id="world-clock-container">
+  <!-- World clock times will be displayed here -->
+</div>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data-10-year-range.min.js"></script>
+    <script src="script.js" defer></script>
+
   </body>
 </html>
