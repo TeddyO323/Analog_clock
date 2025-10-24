@@ -1,288 +1,243 @@
-// Get references to DOM elements
-const body = document.querySelector("body"),
-  hourHand = document.querySelector(".hour"),
-  minuteHand = document.querySelector(".minute"),
-  secondHand = document.querySelector(".second")
-//   modeSwitch = document.querySelector(".mode-switch");
-// // check if the mode is already set to "Dark Mode" in localStorage
-// if (localStorage.getItem("mode") === "Dark Mode") {
-//   // add "dark" class to body and set modeSwitch text to "Light Mode"
-//   body.classList.add("dark");
-//   modeSwitch.textContent = "Light Mode";
-// }
-// // add a click event listener to modeSwitch
-// modeSwitch.addEventListener("click", () => {
-//   // toggle the "dark" class on the body element
-//   body.classList.toggle("dark");
-//   // check if the "dark" class is currently present on the body element
-//   const isDarkMode = body.classList.contains("dark");
-//   // set modeSwitch text based on "dark" class presence
-//   modeSwitch.textContent = isDarkMode ? "Light Mode" : "Dark Mode";
-//   // set localStorage "mode" item based on "dark" class presence
-//   localStorage.setItem("mode", isDarkMode ? "Dark Mode" : "Light Mode");
-// });
-const updateTime = () => {
-    
-  // Get current time and calculate degrees for clock hands
-  let date = new Date(),
-    secToDeg = (date.getSeconds() / 60) * 360,
-    minToDeg = (date.getMinutes() / 60) * 360,
-    hrToDeg = (date.getHours() / 12) * 360;
-  // Rotate the clock hands to the appropriate degree based on the current time
-  secondHand.style.transform = `rotate(${secToDeg}deg)`;
-  minuteHand.style.transform = `rotate(${minToDeg}deg)`;
-  hourHand.style.transform = `rotate(${hrToDeg}deg)`;
-};
+document.addEventListener('DOMContentLoaded', function() {
+    // DOM Elements
+    const clockCanvas = document.getElementById('analogClock');
+    const ctx = clockCanvas.getContext('2d');
+    const digitalTime = document.getElementById('digitalTime');
+    const timezoneLabel = document.getElementById('timezoneLabel');
+    const timezoneSelect = document.getElementById('timezoneSelect');
+    const timezoneSearch = document.getElementById('timezoneSearch');
+    const timezoneTable = document.getElementById('timezoneTable');
+    const faceColor = document.getElementById('faceColor');
+    const borderColor = document.getElementById('borderColor');
+    const hourColor = document.getElementById('hourColor');
+    const minuteColor = document.getElementById('minuteColor');
+    const secondColor = document.getElementById('secondColor');
+    const saveSettings = document.getElementById('saveSettings');
 
-function updateDate() {
-    const weekdayElement = document.getElementById("weekday");
-    const monthElement = document.getElementById("month");
-    const dayElement = document.getElementById("day");
-    const yearElement = document.getElementById("year");
+    // Clock settings
+    let settings = {
+        timezone: moment.tz.guess(),
+        faceColor: '#f8fafc',
+        borderColor: '#4f46e5',
+        hourColor: '#1e40af',
+        minuteColor: '#dc2626',
+        secondColor: '#10b981'
+    };
 
-    const currentDate = new Date();
-    const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
-    const formattedDate = currentDate.toLocaleDateString('en-US', options);
-
-    const [weekday, month, day, year] = formattedDate.split(' ');
-
-    weekdayElement.textContent = weekday;
-    monthElement.textContent = month;
-    dayElement.textContent = day;
-    yearElement.textContent = year;
-}
-
-const timezoneSelector = document.getElementById("timezone-selector");
-
-// Create the default option
-const defaultOption = document.createElement("option");
-defaultOption.value = "";
-defaultOption.textContent = "Select Time Zone";
-
-// Append the default option to the selector
-timezoneSelector.appendChild(defaultOption);
-
-// Get a list of all available time zones
-const allTimeZones = moment.tz.names();
-
-// Populate the time zone selector with options
-allTimeZones.forEach((timeZone) => {
-    const option = document.createElement("option");
-    option.value = timeZone;
-    option.textContent = timeZone;
-    timezoneSelector.appendChild(option);
-});
-
-// Set a default time zone (e.g., user's local time zone)
-const userLocalTimeZone = moment.tz.guess();
-timezoneSelector.value = userLocalTimeZone;
-
-// Add an event listener to the time zone selector
-timezoneSelector.addEventListener("change", () => {
-    const selectedTimeZone = timezoneSelector.value;
-    // Call a function to update the clock hands based on the selected time zone
-    updateClockHands(selectedTimeZone);
-});
-
-function updateClockHands(selectedTimeZone) {
-    const dateInSelectedTimeZone = moment.tz(selectedTimeZone);
-    const hours = dateInSelectedTimeZone.hours();
-    const minutes = dateInSelectedTimeZone.minutes();
-    const seconds = dateInSelectedTimeZone.seconds();
-
-    const hourHand = document.querySelector(".hand.hour");
-    const minuteHand = document.querySelector(".hand.minute");
-    const secondHand = document.querySelector(".hand.second");
-
-    // Calculate rotation angles for the clock hands
-    const secondAngle = (seconds / 60) * 360;
-    const minuteAngle = ((minutes + seconds / 60) / 60) * 360;
-    const hourAngle = ((hours % 12 + minuteAngle / 360) / 12) * 360;
-
-    // Rotate the clock hands
-    secondHand.style.transform = `rotate(${secondAngle}deg)`;
-    minuteHand.style.transform = `rotate(${minuteAngle}deg)`;
-    hourHand.style.transform = `rotate(${hourAngle}deg)`;
-}
-
-// Function to update the clock hands based on user input
-function updateClockHandsStyle(color, style) {
-  // Apply user-defined styles to the clock hands
-  hourHand.style.backgroundColor = color;
-  hourHand.style.borderRadius = style === "round" ? "50%" : "0";
-
-  minuteHand.style.backgroundColor = color;
-  minuteHand.style.borderRadius = style === "round" ? "50%" : "0";
-
-  secondHand.style.backgroundColor = color;
-  secondHand.style.borderRadius = style === "round" ? "50%" : "0";
-    hourHand.style.transition = "transform 0.5s ease-in-out";
-  minuteHand.style.transition = "transform 0.5s ease-in-out";
-  secondHand.style.transition = "transform 0.5s ease-in-out";
-}
-function updateClockHandsRotation(hourAngle, minuteAngle, secondAngle) {
-  // Use requestAnimationFrame for precise control over animations
-  requestAnimationFrame(() => {
-    hourHand.style.transform = `rotate(${hourAngle}deg)`;
-    minuteHand.style.transform = `rotate(${minuteAngle}deg)`;
-    secondHand.style.transform = `rotate(${secondAngle}deg)`;
-  });
-}
-
-// Example: You can call these functions to update clock hands
-updateClockHandsStyle("black", 8, "square");
-updateClockHandsRotation(90, 180, 270); // Example rotation angles
-
-// Example: You can add input fields or options to allow users to customize the clock hands.
-const colorInput = document.getElementById("hand-color");
-
-const styleInput = document.getElementById("hand-style");
-
-// Add event listeners to update the clock hands when user input changes
-colorInput.addEventListener("change", () => {
-  const color = colorInput.value;
-  updateClockHandsStyle(color, styleInput.value);
-});
-
-
-
-styleInput.addEventListener("change", () => {
-  const style = styleInput.value;
-  updateClockHandsStyle(colorInput.value,  style);
-});
-
-// Initialize the clock hands with default values (you can customize these)
-updateClockHandsStyle("black", 8, "square");
-
-// Update the date every 1000 milliseconds (1 second)
-setInterval(updateDate, 1000);
-
-
-
-// Initial update when the page loads
-updateDate();
-// call updateTime to set clock hands every second
-setInterval(updateTime, 1000);
-//call updateTime function on page load
-updateTime();
-
-// Get references to the clock circle and the clock background color input field
-const clockCircle = document.querySelector(".clock");
-const clockBgColorInput = document.getElementById("clock-bg-color");
-
-// Function to update the clock circle's background color
-function updateClockBackgroundColor(bgColor) {
-  clockCircle.style.backgroundColor = bgColor;
-}
-
-// Add an event listener to the clock background color input field
-clockBgColorInput.addEventListener("input", () => {
-  const bgColor = clockBgColorInput.value;
-  updateClockBackgroundColor(bgColor);
-});
-
-// Initialize the clock circle's background color with the default value
-updateClockBackgroundColor("#fff"); // Example default value
-
-// Get references to the transparency and rounded ends input fields
-const handTransparencyInput = document.getElementById("hand-transparency");
-const roundedEndsInput = document.getElementById("rounded-ends");
-
-// Function to update hand transparency
-function updateHandTransparency(transparency) {
-  const hands = document.querySelectorAll(".hand");
-  hands.forEach((hand) => {
-    hand.style.opacity = transparency;
-  });
-}
-
-// Function to update hand rounded ends
-function updateRoundedEnds(rounded) {
-  const hands = document.querySelectorAll(".hand");
-  hands.forEach((hand) => {
-    if (rounded) {
-      hand.classList.add("rounded");
-    } else {
-      hand.classList.remove("rounded");
+    // Initialize the app
+    function init() {
+        loadSettings();
+        populateTimezones();
+        updateClock();
+        setInterval(updateClock, 1000);
+        setupEventListeners();
     }
-  });
-}
 
-// Add event listeners to transparency and rounded ends input fields
-handTransparencyInput.addEventListener("input", () => {
-  const transparency = handTransparencyInput.value;
-  updateHandTransparency(transparency);
+    // Load settings from localStorage
+    function loadSettings() {
+        const savedSettings = localStorage.getItem('clockSettings');
+        if (savedSettings) {
+            settings = JSON.parse(savedSettings);
+            applySettingsToUI();
+        }
+    }
+
+    // Apply settings to UI
+    function applySettingsToUI() {
+        faceColor.value = settings.faceColor;
+        borderColor.value = settings.borderColor;
+        hourColor.value = settings.hourColor;
+        minuteColor.value = settings.minuteColor;
+        secondColor.value = settings.secondColor;
+        
+        // Find and select the current timezone in dropdown
+        if (timezoneSelect.options.length > 0) {
+            for (let i = 0; i < timezoneSelect.options.length; i++) {
+                if (timezoneSelect.options[i].value === settings.timezone) {
+                    timezoneSelect.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+    }
+
+    // Save settings to localStorage
+    function saveClockSettings() {
+        settings.faceColor = faceColor.value;
+        settings.borderColor = borderColor.value;
+        settings.hourColor = hourColor.value;
+        settings.minuteColor = minuteColor.value;
+        settings.secondColor = secondColor.value;
+        settings.timezone = timezoneSelect.value;
+        
+        localStorage.setItem('clockSettings', JSON.stringify(settings));
+        
+        // Show confirmation
+        const toast = document.createElement('div');
+        toast.className = 'fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg';
+        toast.textContent = 'Settings saved!';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    }
+
+    // Populate timezone dropdown and table
+    function populateTimezones() {
+        const timezones = moment.tz.names();
+        
+        // Populate dropdown
+        timezones.forEach(tz => {
+            const option = document.createElement('option');
+            option.value = tz;
+            option.textContent = tz;
+            timezoneSelect.appendChild(option);
+        });
+        
+        // Populate table
+        updateTimezoneTable(timezones);
+    }
+
+    // Update timezone table with search results
+    function updateTimezoneTable(timezones, searchTerm = '') {
+        timezoneTable.innerHTML = '';
+        
+        const filteredZones = searchTerm 
+            ? timezones.filter(tz => tz.toLowerCase().includes(searchTerm.toLowerCase()))
+            : timezones;
+        
+        filteredZones.forEach(tz => {
+            const row = document.createElement('tr');
+            row.className = 'border-b border-gray-100 hover:bg-indigo-50 cursor-pointer';
+            row.addEventListener('click', () => {
+                settings.timezone = tz;
+                timezoneSelect.value = tz;
+                saveClockSettings();
+            });
+            
+            const tzCell = document.createElement('td');
+            tzCell.className = 'py-2';
+            tzCell.textContent = tz;
+            
+            const timeCell = document.createElement('td');
+            timeCell.className = 'py-2';
+            timeCell.textContent = moment().tz(tz).format('HH:mm:ss');
+            
+            const offsetCell = document.createElement('td');
+            offsetCell.className = 'py-2';
+            offsetCell.textContent = moment.tz(tz).format('Z');
+            
+            row.appendChild(tzCell);
+            row.appendChild(timeCell);
+            row.appendChild(offsetCell);
+            timezoneTable.appendChild(row);
+        });
+        
+        // Update table times every second
+        setInterval(() => {
+            const rows = timezoneTable.querySelectorAll('tr');
+            rows.forEach(row => {
+                const tz = row.cells[0].textContent;
+                row.cells[1].textContent = moment().tz(tz).format('HH:mm:ss');
+            });
+        }, 1000);
+    }
+
+    // Update the clock display
+    function updateClock() {
+        const now = moment().tz(settings.timezone);
+        const hours = now.hours();
+        const minutes = now.minutes();
+        const seconds = now.seconds();
+        
+        // Update digital display
+        digitalTime.textContent = now.format('HH:mm:ss');
+        timezoneLabel.textContent = settings.timezone;
+        
+        // Draw analog clock
+        drawClock(hours, minutes, seconds);
+    }
+
+    // Draw the analog clock
+    function drawClock(hours, minutes, seconds) {
+        const radius = clockCanvas.width / 2;
+        ctx.clearRect(0, 0, clockCanvas.width, clockCanvas.height);
+        
+        // Draw clock face
+        ctx.beginPath();
+        ctx.arc(radius, radius, radius - 10, 0, 2 * Math.PI);
+        ctx.fillStyle = settings.faceColor;
+        ctx.fill();
+        ctx.strokeStyle = settings.borderColor;
+        ctx.lineWidth = 8;
+        ctx.stroke();
+        
+        // Draw clock numbers
+        ctx.font = radius * 0.15 + 'px Arial';
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#333';
+        for (let i = 1; i <= 12; i++) {
+            const angle = i * Math.PI / 6;
+            const textRadius = radius * 0.85;
+            const x = radius + Math.sin(angle) * textRadius;
+            const y = radius - Math.cos(angle) * textRadius;
+            ctx.fillText(i.toString(), x, y);
+        }
+        
+        // Draw hour hand
+        const hourAngle = (hours % 12 + minutes / 60) * Math.PI / 6;
+        drawHand(hourAngle, radius * 0.5, 8, settings.hourColor);
+        
+        // Draw minute hand
+        const minuteAngle = minutes * Math.PI / 30;
+        drawHand(minuteAngle, radius * 0.7, 5, settings.minuteColor);
+        
+        // Draw second hand
+        const secondAngle = seconds * Math.PI / 30;
+        drawHand(secondAngle, radius * 0.8, 2, settings.secondColor);
+        
+        // Draw center circle
+        ctx.beginPath();
+        ctx.arc(radius, radius, radius * 0.05, 0, 2 * Math.PI);
+        ctx.fillStyle = settings.borderColor;
+        ctx.fill();
+    }
+
+    // Draw a clock hand
+    function drawHand(angle, length, width, color) {
+        const radius = clockCanvas.width / 2;
+        ctx.beginPath();
+        ctx.lineWidth = width;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = color;
+        ctx.moveTo(radius, radius);
+        ctx.lineTo(
+            radius + Math.sin(angle) * length,
+            radius - Math.cos(angle) * length
+        );
+        ctx.stroke();
+    }
+
+    // Set up event listeners
+    function setupEventListeners() {
+        timezoneSelect.addEventListener('change', function() {
+            settings.timezone = this.value;
+            updateClock();
+        });
+        
+        timezoneSearch.addEventListener('input', function() {
+            updateTimezoneTable(moment.tz.names(), this.value);
+        });
+        
+        saveSettings.addEventListener('click', saveClockSettings);
+        
+        // Color pickers
+        [faceColor, borderColor, hourColor, minuteColor, secondColor].forEach(picker => {
+            picker.addEventListener('input', function() {
+                updateClock();
+            });
+        });
+    }
+
+    // Start the app
+    init();
 });
-
-roundedEndsInput.addEventListener("change", () => {
-  const rounded = roundedEndsInput.checked;
-  updateRoundedEnds(rounded);
-});
-
-// Initialize hand transparency and rounded ends with default values
-updateHandTransparency(1); // No transparency
-updateRoundedEnds(false); // No rounded ends
-
-
-
-// Get references to the question mark icons and information panels
-const timezoneInfoPanel = document.getElementById("timezone-info-panel");
-const timekeepingInfoPanel = document.getElementById("timekeeping-info-panel");
-const analogClockInfoPanel = document.getElementById("analog-clock-info-panel");
-
-const timezoneQuestionMark = document.getElementById("timezone-question-mark");
-const timekeepingQuestionMark = document.getElementById("timekeeping-question-mark");
-const analogClockQuestionMark = document.getElementById("analog-clock-question-mark");
-
-// Function to show the information panel and position it near the question mark icon
-function showInfoPanel(infoPanel, questionMark) {
-  infoPanel.style.display = "block";
-
-  // Position the info panel near the question mark icon
-  const rect = questionMark.getBoundingClientRect();
-  infoPanel.style.left = rect.left + "px";
-  infoPanel.style.top = rect.bottom + 5 + "px"; // Adjust the vertical position
-}
-
-// Function to hide the information panel
-function hideInfoPanel(infoPanel) {
-  infoPanel.style.display = "none";
-}
-
-// Add event listeners to question mark icons for showing/hiding information panels
-timezoneQuestionMark.addEventListener("mouseenter", () => {
-  showInfoPanel(timezoneInfoPanel, timezoneQuestionMark);
-});
-
-timezoneQuestionMark.addEventListener("mouseleave", () => {
-  hideInfoPanel(timezoneInfoPanel);
-});
-
-timekeepingQuestionMark.addEventListener("mouseenter", () => {
-  showInfoPanel(timekeepingInfoPanel, timekeepingQuestionMark);
-});
-
-timekeepingQuestionMark.addEventListener("mouseleave", () => {
-  hideInfoPanel(timekeepingInfoPanel);
-});
-
-analogClockQuestionMark.addEventListener("mouseenter", () => {
-  showInfoPanel(analogClockInfoPanel, analogClockQuestionMark);
-});
-
-analogClockQuestionMark.addEventListener("mouseleave", () => {
-  hideInfoPanel(analogClockInfoPanel);
-});
-
-// Populate the information panels with educational content
-timezoneInfoPanel.innerHTML = "Learn about time zones and their importance.";
-timekeepingInfoPanel.innerHTML = "Explore the history of timekeeping methods.";
-analogClockInfoPanel.innerHTML = "Discover the history and mechanics of analog clocks.";
-
-// Function to fetch and display world clock times
-function displayWorldClock() {
-  // Implement logic to fetch and display world clock times
-}
-
-// Call the function to display world clock times when the page loads
-displayWorldClock();
